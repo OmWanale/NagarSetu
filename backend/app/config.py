@@ -16,10 +16,14 @@ class Settings(BaseSettings):
     # Gemini API Key
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     
+    # Gemini Model Name
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    
     # Model Cache Directory (for local AI models)
     MODEL_CACHE_DIR: str = os.getenv("MODEL_CACHE_DIR", "./model_cache")
 
     class Config:
+        env_file = ".env"
         case_sensitive = True
 
 settings = Settings()

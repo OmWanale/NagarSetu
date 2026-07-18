@@ -10,6 +10,8 @@ from app.ai.router import route_department
 from app.ai.gemini_client import analyze_complaint_with_gemini
 
 def run_tests():
+    from app.config import settings
+    print(f"DEBUG: Loaded Gemini API Key is '{settings.GEMINI_API_KEY}'")
     print("====================================================")
     print("RUNNING NAGARSETU AI BACKEND PIPELINE CHECKS")
     print("====================================================")

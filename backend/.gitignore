@@ -1,0 +1,20 @@
+# Python virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local configuration
+.env
+
+# Database files
+*.db
+*.sqlite3

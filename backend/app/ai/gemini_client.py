@@ -49,7 +49,7 @@ def analyze_complaint_with_gemini(description: str, category: str, ward: str) ->
     
     try:
         # Standard HTTP post to Gemini API (v1beta endpoint)
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={settings.GEMINI_API_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.GEMINI_MODEL}:generateContent?key={settings.GEMINI_API_KEY}"
         headers = {"Content-Type": "application/json"}
         payload = {
             "contents": [{
