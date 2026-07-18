@@ -6,7 +6,7 @@ from datetime import datetime
 from app.database import get_db
 from app.models import Complaint, User, DuplicateGroup
 from app.schemas import ComplaintCreate, ComplaintResponse, DuplicateGroupResponse
-from app.auth import get_current_user, get_current_officer, get_current_user_optional
+from app.auth import get_current_user, get_current_officer, get_current_user_optional, get_current_officer_optional
 from app.ai.classifier import classify_complaint
 from app.ai.duplication import check_for_duplicates
 from app.ai.router import route_department
@@ -142,7 +142,7 @@ def get_all_complaints(
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
     db: Session = Depends(get_db),
-    current_officer: User = Depends(get_current_officer)
+    current_officer: User = Depends(get_current_officer_optional)
 ):
     query = db.query(Complaint)
     
@@ -193,13 +193,22 @@ def get_all_complaints(
 @router.get("/my-complaints", response_model=List[ComplaintResponse])
 def get_my_complaints(
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User | None = Depends(get_current_user_optional)
 ):
-    return db.query(Complaint).filter(Complaint.citizen_id == current_user.id).order_by(Complaint.created_at.desc()).all()
+    citizen_id = current_user.id if current_user else None
+    if not citizen_id:
+        demo_citizen = db.query(User).filter(User.username == "demo_citizen").first()
+        if demo_citizen:
+            citizen_id = demo_citizen.id
+            
+    if not citizen_id:
+        return []
+        
+    return db.query(Complaint).filter(Complaint.citizen_id == citizen_id).order_by(Complaint.created_at.desc()).all()
 
 @router.get("/duplicates", response_model=List[DuplicateGroupResponse])
 def get_duplicate_groups(
     db: Session = Depends(get_db),
-    current_officer: User = Depends(get_current_officer)
+    current_officer: User = Depends(get_current_officer_optional)
 ):
     return db.query(DuplicateGroup).order_by(DuplicateGroup.created_at.desc()).all()

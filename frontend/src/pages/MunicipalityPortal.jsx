@@ -92,7 +92,7 @@ export default function MunicipalityPortal() {
   const [showHeatmap, setShowHeatmap] = useState(true);
   const [showCluster, setShowCluster] = useState(true);
 
-  // Load complaints and duplicate groups
+  // Load complaints and duplicate groups from backend DB
   const loadData = async (silent = false) => {
     if (!silent) setLoading(true);
     else setRefreshing(true);
@@ -107,7 +107,7 @@ export default function MunicipalityPortal() {
       if (compRes.ok) {
         complaintsData = await compRes.json();
       } else {
-        complaintsData = getDemoMunicipalityComplaints();
+        console.error("Failed to fetch complaints from backend:", compRes.status);
       }
 
       // 2. Fetch duplicate groups
@@ -115,8 +115,6 @@ export default function MunicipalityPortal() {
       let duplicatesData = [];
       if (dupRes.ok) {
         duplicatesData = await dupRes.json();
-      } else {
-        duplicatesData = getDemoDuplicateGroups();
       }
 
       // 3. Fetch advanced statistics
@@ -131,11 +129,7 @@ export default function MunicipalityPortal() {
       setComplaints(complaintsData);
       setDuplicateGroups(duplicatesData);
     } catch (e) {
-      console.warn("Backend API offline. Using fallback municipal data.", e);
-      const fallbackComplaints = getDemoMunicipalityComplaints();
-      setComplaints(fallbackComplaints);
-      setDuplicateGroups(getDemoDuplicateGroups());
-      setAdvancedStats(computeClientStats(fallbackComplaints));
+      console.error("Backend API connection error in loadData:", e);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -1791,151 +1785,9 @@ function round(value, precision) {
 
 // Seseeded Indian location complaints fallback list
 function getDemoMunicipalityComplaints() {
-  return [
-    {
-      id: "complaint-1",
-      description: "Heavy drinking water leakage from pipeline valve under Shivaji Park main gate, wasting thousands of liters.",
-      category: "Water Supply",
-      priority: "High",
-      country: "India",
-      state: "Maharashtra",
-      district: "Mumbai City",
-      city: "Mumbai",
-      locality: "Shivaji Park",
-      pincode: "400028",
-      formatted_address: "Shivaji Park, Mumbai, Mumbai City, Maharashtra - 400028, India",
-      pipeline_stage: "In_Progress",
-      citizen_name: "Amit Patel",
-      submission_hour: 9,
-      latitude: 19.0261,
-      longitude: 72.8373,
-      department: "Water Supply & Sewerage Board",
-      resolution_time: "24 Hours",
-      status: "In_Progress",
-      priority_reasoning: "Fresh water line rupture in public recreation park.",
-      officer_recommendation: "K. Ramesh (Water Inspector)",
-      created_at: "2026-07-14T09:12:00Z"
-    },
-    {
-      id: "complaint-2",
-      description: "Stinking sewer water overflowing from open manholes on Bandra West main shopping lane. Pedestrians can't walk.",
-      category: "Sanitation",
-      priority: "Critical",
-      country: "India",
-      state: "Maharashtra",
-      district: "Mumbai City",
-      city: "Mumbai",
-      locality: "Bandra",
-      pincode: "400050",
-      formatted_address: "Bandra West, Mumbai, Mumbai City, Maharashtra - 400050, India",
-      pipeline_stage: "In_Progress",
-      citizen_name: "Priya Nair",
-      submission_hour: 18,
-      latitude: 19.0596,
-      longitude: 72.8295,
-      department: "Health and Sanitation Commission",
-      resolution_time: "12 Hours",
-      status: "In_Progress",
-      priority_reasoning: "Sewer overflow in highly crowded shopping strip represents immediate biological hazard.",
-      officer_recommendation: "Dr. A. Sharma (Chief Sanitation Officer)",
-      created_at: "2026-07-16T18:30:00Z"
-    },
-    {
-      id: "complaint-3",
-      description: "Streetlights completely dark on Dwarka block G lane for 4 nights, feels extremely unsafe.",
-      category: "Electricity",
-      priority: "Medium",
-      country: "India",
-      state: "Delhi",
-      district: "New Delhi",
-      city: "New Delhi",
-      locality: "Dwarka",
-      pincode: "110075",
-      formatted_address: "Dwarka, New Delhi, New Delhi, Delhi - 110075, India",
-      pipeline_stage: "Officer_Review",
-      citizen_name: "Rohan Mehta",
-      submission_hour: 20,
-      latitude: 28.5860,
-      longitude: 77.0589,
-      department: "Electricity Distribution Board",
-      resolution_time: "48 Hours",
-      status: "Assigned",
-      priority_reasoning: "Light blackout in residential lane, pedestrian safety concerns.",
-      officer_recommendation: "V. Prasad (Lineman Overseer)",
-      created_at: "2026-07-13T20:40:00Z"
-    },
-    {
-      id: "complaint-4",
-      description: "A cluster of dangerous potholes has formed near Indiranagar Double Road metro pillar. Two bikers fell today.",
-      category: "Roads/Potholes",
-      priority: "High",
-      country: "India",
-      state: "Karnataka",
-      district: "Bengaluru Urban",
-      city: "Bengaluru",
-      locality: "Indiranagar",
-      pincode: "560038",
-      formatted_address: "Indiranagar, Bengaluru, Bengaluru Urban, Karnataka - 560038, India",
-      pipeline_stage: "In_Progress",
-      citizen_name: "Vikram Sen",
-      submission_hour: 17,
-      latitude: 12.9784,
-      longitude: 77.6408,
-      department: "Public Works Department",
-      resolution_time: "24 Hours",
-      status: "In_Progress",
-      priority_reasoning: "Deep asphalt crater on high-speed lane. Threat to two-wheeler safety.",
-      officer_recommendation: "S. Murthy (PWD Inspector)",
-      created_at: "2026-07-15T17:15:00Z"
-    },
-    {
-      id: "complaint-5",
-      description: "Extreme mosquito breeding in waterlogged empty plots in Whitefield. Malaria cases are spiking.",
-      category: "Public Health",
-      priority: "High",
-      country: "India",
-      state: "Karnataka",
-      district: "Bengaluru Urban",
-      city: "Bengaluru",
-      locality: "Whitefield",
-      pincode: "560066",
-      formatted_address: "Whitefield, Bengaluru, Bengaluru Urban, Karnataka - 560066, India",
-      pipeline_stage: "Officer_Review",
-      citizen_name: "Sneha Rao",
-      submission_hour: 19,
-      latitude: 12.9698,
-      longitude: 77.7499,
-      department: "Health and Sanitation Commission",
-      resolution_time: "24 Hours",
-      status: "Pending",
-      priority_reasoning: "Stagnant pools trigger vector-borne disease outbreak alert.",
-      officer_recommendation: "Dr. A. Sharma (Chief Sanitation Officer)",
-      created_at: "2026-07-17T19:05:00Z"
-    }
-  ];
+  return [];
 }
 
 function getDemoDuplicateGroups() {
-  return [
-    {
-      id: "dup-group-1",
-      similarity_score: 0.925,
-      primary_complaint: {
-        id: "complaint-2",
-        description: "Stinking sewer water overflowing from open manholes on Bandra West main shopping lane.",
-        city: "Mumbai",
-        locality: "Bandra",
-        created_at: new Date()
-      },
-      secondary_complaints: [
-        {
-          id: "complaint-sub-1",
-          description: "Raw sewage water leaking from drains onto Bandra shopping pathway, smells disgusting.",
-          city: "Mumbai",
-          locality: "Bandra",
-          created_at: new Date()
-        }
-      ]
-    }
-  ];
+  return [];
 }

@@ -25,18 +25,19 @@ export const AuthProvider = ({ children }) => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
-  // Set base API URL - will fall back to relative or localhost if needed
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  // Set base API URL - strip trailing slash if present
+  const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  const API_URL = rawApiUrl.replace(/\/+$/, '');
 
   useEffect(() => {
     const initializeAuth = async () => {
       const storedToken = localStorage.getItem('nagarsetu_token');
       const storedUser = localStorage.getItem('nagarsetu_user');
       
-      if (storedToken && storedUser) {
+      if (storedUser) {
         try {
           setUser(JSON.parse(storedUser));
-          setToken(storedToken);
+          setToken(storedToken || null);
         } catch (e) {
           console.error("Error parsing stored auth session", e);
           logout();
@@ -69,8 +70,8 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      localStorage.setItem('civiciq_token', data.access_token);
-      localStorage.setItem('civiciq_user', JSON.stringify(data.user));
+      localStorage.setItem('nagarsetu_token', data.access_token);
+      localStorage.setItem('nagarsetu_user', JSON.stringify(data.user));
       
       setUser(data.user);
       setToken(data.access_token);
@@ -130,18 +131,17 @@ export const AuthProvider = ({ children }) => {
           id: role === 'citizen' ? 'demo-citizen-id' : 'demo-officer-id',
           username: role === 'citizen' ? 'demo_citizen' : 'demo_officer',
           email: role === 'citizen' ? 'citizen@nagarsetu.gov.in' : 'officer@nagarsetu.gov.in',
-          full_name: role === 'citizen' ? 'Ananya Sharma (Demo)' : 'Commissioner Rajesh Kumar (Demo)',
+          full_name: role === 'citizen' ? 'Ananya Sharma (Demo)' : 'Commissioner Rajesh Kumar (Demo Inspector)',
           role: role === 'citizen' ? 'citizen' : 'officer',
-          locality: role === 'citizen' ? 'Malleswaram' : 'All Localities',
+          ward: role === 'citizen' ? 'Ward 4 (Malleswaram)' : 'All Wards',
           is_demo: true
         };
-        const mockToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo-token";
         
-        localStorage.setItem('nagarsetu_token', mockToken);
+        localStorage.removeItem('nagarsetu_token');
         localStorage.setItem('nagarsetu_user', JSON.stringify(localMockUser));
         
         setUser(localMockUser);
-        setToken(mockToken);
+        setToken(null);
         setIsLoading(false);
         return localMockUser;
       }
@@ -155,24 +155,22 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
       return data.user;
     } catch (error) {
-      console.warn("Backend demoLogin connection error. Using local mock session fallback.", error);
-      // Fallback
+      console.warn("Backend demoLogin connection error. Using local session fallback.", error);
       const localMockUser = {
         id: role === 'citizen' ? 'demo-citizen-id' : 'demo-officer-id',
         username: role === 'citizen' ? 'demo_citizen' : 'demo_officer',
         email: role === 'citizen' ? 'citizen@nagarsetu.gov.in' : 'officer@nagarsetu.gov.in',
-        full_name: role === 'citizen' ? 'Ananya Sharma (Demo)' : 'Commissioner Rajesh Kumar (Demo)',
+        full_name: role === 'citizen' ? 'Ananya Sharma (Demo)' : 'Commissioner Rajesh Kumar (Demo Inspector)',
         role: role === 'citizen' ? 'citizen' : 'officer',
         ward: role === 'citizen' ? 'Ward 4 (Malleswaram)' : 'All Wards',
         is_demo: true
       };
-      const mockToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo-token";
       
-      localStorage.setItem('nagarsetu_token', mockToken);
+      localStorage.removeItem('nagarsetu_token');
       localStorage.setItem('nagarsetu_user', JSON.stringify(localMockUser));
       
       setUser(localMockUser);
-      setToken(mockToken);
+      setToken(null);
       setIsLoading(false);
       return localMockUser;
     }

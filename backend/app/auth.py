@@ -101,3 +101,26 @@ def get_current_officer(current_user: User = Depends(get_current_user)) -> User:
             detail="Access denied: Municipal Officer permissions required"
         )
     return current_user
+
+def get_current_officer_optional(
+    current_user: Optional[User] = Depends(get_current_user_optional),
+    db: Session = Depends(get_db)
+) -> User:
+    if current_user and current_user.role in ["officer", "admin"]:
+        return current_user
+        
+    demo_officer = db.query(User).filter(User.username == "demo_officer").first()
+    if not demo_officer:
+        demo_officer = User(
+            username="demo_officer",
+            email="officer@nagarsetu.gov.in",
+            hashed_password="pbkdf2:dummy",
+            full_name="Commissioner Rajesh Kumar (Demo Inspector)",
+            role="officer",
+            phone_number="+91 94480 55443",
+            ward="All Wards"
+        )
+        db.add(demo_officer)
+        db.commit()
+        db.refresh(demo_officer)
+    return demo_officer

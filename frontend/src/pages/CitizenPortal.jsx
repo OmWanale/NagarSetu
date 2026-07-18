@@ -113,7 +113,7 @@ export default function CitizenPortal() {
   const [submittedId, setSubmittedId] = useState(null);
   const [aiPrediction, setAiPrediction] = useState(null);
 
-  // Load citizen complaints
+  // Load citizen complaints from backend DB
   const fetchComplaints = async () => {
     setLoading(true);
     try {
@@ -125,11 +125,12 @@ export default function CitizenPortal() {
         const data = await response.json();
         setComplaints(data);
       } else {
-        setComplaints(getDemoCitizenComplaints());
+        console.error("Error response fetching complaints:", response.status);
+        setComplaints([]);
       }
     } catch (e) {
-      console.warn("Backend error fetching citizen complaints. Using fallback demo complaints.", e);
-      setComplaints(getDemoCitizenComplaints());
+      console.error("Backend error fetching citizen complaints:", e);
+      setComplaints([]);
     } finally {
       setLoading(false);
     }
@@ -154,7 +155,7 @@ export default function CitizenPortal() {
     }
   };
 
-  // Submit Complaint Form
+  // Submit Complaint Form directly to Backend API
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!description.trim()) return;
@@ -196,19 +197,18 @@ export default function CitizenPortal() {
 
             if (response.ok) {
               const data = await response.json();
-              setAiPrediction(data.ai_meta || data);
+              setAiPrediction(data);
               setSubmittedId(data.id);
               setSubmitStatus('success');
-              fetchComplaints(); // Refresh list
+              fetchComplaints(); // Refresh list from backend database
             } else {
-              throw new Error("API Submission failed");
+              const errJson = await response.json().catch(() => ({}));
+              throw new Error(errJson.detail || "API Submission failed");
             }
           } catch (err) {
-            console.warn("Backend API error on submission. Simulating local client-side AI pipeline.", err);
-            const simulatedClassification = simulateAISubmit(description, country, state, district, city, locality, pincode, formattedAddress, pinPosition);
-            setAiPrediction(simulatedClassification);
-            setComplaints(prev => [simulatedClassification, ...prev]);
-            setSubmitStatus('success');
+            console.error("Backend API error on submission:", err);
+            alert(`Failed to submit complaint: ${err.message || 'Network error'}`);
+            setSubmitStatus(null);
           }
         }, 1200);
       }, 1200);
@@ -892,51 +892,5 @@ function simulateAISubmit(desc, country, state, district, city, locality, pincod
 }
 
 function getDemoCitizenComplaints() {
-  return [
-    {
-      id: "complaint-101",
-      description: "Severe water log and leakage from water pipeline near Malleswaram 15th cross, blocking street traffic.",
-      country: "India",
-      state: "Karnataka",
-      district: "Bengaluru Urban",
-      city: "Bengaluru",
-      locality: "Malleswaram",
-      pincode: "560003",
-      formatted_address: "Malleswaram, Bengaluru, Bengaluru Urban, Karnataka - 560003, India",
-      pipeline_stage: "In_Progress",
-      latitude: 12.9982,
-      longitude: 77.5714,
-      category: "Water Supply",
-      priority: "High",
-      department: "Water Supply & Sewerage Board",
-      resolution_time: "24 Hours",
-      priority_reasoning: "High priority due to fresh water wastage and obstruction of secondary traffic path.",
-      officer_recommendation: "K. Ramesh (Water Inspector)",
-      status: "In_Progress",
-      created_at: "2026-07-17T11:20:00Z"
-    },
-    {
-      id: "complaint-102",
-      description: "Street lights completely out on the outer ring road corner. It becomes extremely dark and unsafe for pedestrians.",
-      country: "India",
-      state: "Karnataka",
-      district: "Bengaluru Urban",
-      city: "Bengaluru",
-      locality: "Malleswaram",
-      pincode: "560003",
-      formatted_address: "Malleswaram, Bengaluru, Bengaluru Urban, Karnataka - 560003, India",
-      pipeline_stage: "Resolved",
-      latitude: 12.9921,
-      longitude: 77.5760,
-      category: "Electricity",
-      priority: "Medium",
-      department: "Electricity Distribution Board",
-      resolution_time: "48 Hours",
-      priority_reasoning: "Pedestrian safety risks. Standard response schedule applies.",
-      officer_recommendation: "V. Prasad (Lineman Overseer)",
-      status: "Resolved",
-      officer_notes: "Replaced 4 sodium vapor bulbs with smart energy-efficient LEDs on July 18. Verified operational.",
-      created_at: "2026-07-15T09:15:00Z"
-    }
-  ];
+  return [];
 }

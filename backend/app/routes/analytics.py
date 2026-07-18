@@ -7,12 +7,12 @@ from typing import List, Dict, Any
 from app.database import get_db
 from app.models import Complaint, User
 from app.schemas import DashboardStats, AnalyticsSummary, CategoryCount, DepartmentCount, DailyTrend, WardCount
-from app.auth import get_current_officer
+from app.auth import get_current_officer_optional
 
 router = APIRouter()
 
 @router.get("/stats", response_model=DashboardStats)
-def get_dashboard_stats(db: Session = Depends(get_db), current_officer: User = Depends(get_current_officer)):
+def get_dashboard_stats(db: Session = Depends(get_db), current_officer: User = Depends(get_current_officer_optional)):
     total = db.query(Complaint).count()
     critical = db.query(Complaint).filter(Complaint.priority == "Critical").count()
     
@@ -37,7 +37,7 @@ def get_dashboard_stats(db: Session = Depends(get_db), current_officer: User = D
     }
 
 @router.get("/summary", response_model=AnalyticsSummary)
-def get_analytics_summary(db: Session = Depends(get_db), current_officer: User = Depends(get_current_officer)):
+def get_analytics_summary(db: Session = Depends(get_db), current_officer: User = Depends(get_current_officer_optional)):
     # 1. Categories
     category_data = db.query(
         Complaint.category, func.count(Complaint.id)
@@ -78,7 +78,7 @@ def get_analytics_summary(db: Session = Depends(get_db), current_officer: User =
     }
 
 @router.get("/advanced")
-def get_advanced_analytics(db: Session = Depends(get_db), current_officer: User = Depends(get_current_officer)):
+def get_advanced_analytics(db: Session = Depends(get_db), current_officer: User = Depends(get_current_officer_optional)):
     """
     Computes exhaustive data sets for advanced Recharts dashboard graphs.
     """

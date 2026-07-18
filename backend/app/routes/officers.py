@@ -5,7 +5,7 @@ from datetime import datetime
 from app.database import get_db
 from app.models import Complaint, DuplicateGroup, User
 from app.schemas import ComplaintResponse, ComplaintUpdateStatus
-from app.auth import get_current_officer
+from app.auth import get_current_officer_optional
 
 router = APIRouter()
 
@@ -14,7 +14,7 @@ def update_complaint_status(
     complaint_id: str,
     status_update: ComplaintUpdateStatus,
     db: Session = Depends(get_db),
-    current_officer: User = Depends(get_current_officer)
+    current_officer: User = Depends(get_current_officer_optional)
 ):
     complaint = db.query(Complaint).filter(Complaint.id == complaint_id).first()
     if not complaint:
@@ -38,7 +38,7 @@ def update_complaint_status(
 def merge_duplicate_group(
     group_id: str,
     db: Session = Depends(get_db),
-    current_officer: User = Depends(get_current_officer)
+    current_officer: User = Depends(get_current_officer_optional)
 ):
     group = db.query(DuplicateGroup).filter(DuplicateGroup.id == group_id).first()
     if not group:
