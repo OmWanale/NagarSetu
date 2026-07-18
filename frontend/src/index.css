@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global transitions */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* ==========================================
+   LIGHT MODE (DEFAULT) STYLING SYSTEM
+   ========================================== */
+
+body {
+  background-color: #f1f5f9 !important; /* slate-100 base */
+  color: #0f172a !important; /* slate-900 primary text */
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 147, 242, 0.05) 0, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(99, 147, 242, 0.03) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(99, 147, 242, 0.05) 0, transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Overwrite Tailwind Utility Colors in Light Mode */
+.bg-slate-950 {
+  background-color: #f8fafc !important; /* slate-50 */
+}
+.bg-slate-900 {
+  background-color: #ffffff !important; /* white */
+}
+.bg-slate-900\/40, .bg-slate-900\/60 {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+}
+.bg-slate-950\/80, .bg-slate-950\/40 {
+  background-color: rgba(248, 250, 252, 0.8) !important;
+}
+.bg-slate-950\/50 {
+  background-color: rgba(241, 245, 249, 0.5) !important;
+}
+.bg-slate-900\/20 {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+}
+.bg-slate-950\/60 {
+  background-color: rgba(248, 250, 252, 0.65) !important;
+}
+.bg-slate-800 {
+  background-color: #cbd5e1 !important; /* slate-200 */
+}
+.bg-slate-800:hover {
+  background-color: #94a3b8 !important; /* slate-350 */
+}
+.hover\:bg-slate-900\/50:hover, .hover\:bg-slate-900\/80:hover {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+.bg-slate-950\/20 {
+  background-color: rgba(241, 245, 249, 0.3) !important;
+}
+
+/* Text and Headings in Light Mode */
+.text-slate-100 {
+  color: #0f172a !important; /* slate-900 text */
+}
+.text-slate-200 {
+  color: #1e293b !important; /* slate-800 text secondary */
+}
+.text-slate-300, .text-slate-350 {
+  color: #334155 !important; /* slate-750 */
+}
+.text-slate-450, .text-slate-400 {
+  color: #475569 !important; /* slate-600 muted */
+}
+.text-slate-500, .text-slate-650 {
+  color: #64748b !important; /* slate-500 sub-muted */
+}
+.text-white {
+  color: #0f172a !important; /* slate-900 headings */
+}
+
+/* Border Overwrite in Light Mode */
+.border-slate-800, .border-slate-800\/80, .border-slate-900, .border-slate-900\/80, .border-slate-850, .border-slate-800\/60 {
+  border-color: #e2e8f0 !important; /* slate-200 borders */
+}
+
+/* Glass cards in Light Mode */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02) !important;
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Exclude Brand items or status labels from dark overrides */
+.bg-brand-500, .bg-brand-600 {
+  color: #ffffff !important;
+}
+.bg-brand-500 .text-slate-950,
+.bg-brand-600 .text-slate-950,
+.bg-brand-500 .text-slate-100,
+.bg-brand-600 .text-slate-100,
+button.bg-gradient-to-r,
+.bg-red-500 .text-white,
+.bg-emerald-600 .text-white,
+.bg-amber-600 .text-white,
+.bg-blue-600 .text-white,
+.bg-purple-600 .text-white,
+.bg-red-500 * ,
+.bg-emerald-600 * ,
+.bg-amber-600 * ,
+.bg-blue-600 * ,
+.bg-purple-600 * {
+  color: #ffffff !important;
+}
+button.bg-brand-500, button.bg-brand-600, button.bg-gradient-to-r * {
+  color: #ffffff !important;
+}
+.bg-brand-500\/10, .bg-brand-950\/20 {
+  background-color: rgba(99, 147, 242, 0.1) !important;
+  border-color: rgba(99, 147, 242, 0.2) !important;
+}
+
+/* Scrollbar in Light Mode */
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 1px solid #f1f5f9;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Selects and inputs placeholder text */
+::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Custom Leaflet Map styling for Light Mode */
+.leaflet-container {
+  background: #ffffff !important;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+.leaflet-bar {
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+.leaflet-bar a {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+.leaflet-bar a:hover {
+  background-color: #f1f5f9 !important;
+  color: #000000 !important;
+}
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+.leaflet-popup-tip {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ==========================================
+   DARK MODE OVERRIDES (HTML.DARK CLASS)
+   ========================================== */
+
+html.dark body {
+  background-color: #0b0f19 !important;
+  color: #f8fafc !important;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(30, 41, 59, 0.3) 0, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(99, 147, 242, 0.05) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(30, 41, 59, 0.3) 0, transparent 50%) !important;
+}
+
+html.dark .bg-slate-950 {
+  background-color: #0b0f19 !important;
+}
+html.dark .bg-slate-900 {
+  background-color: #0f172a !important;
+}
+html.dark .bg-slate-900\/40 {
+  background-color: rgba(15, 23, 42, 0.4) !important;
+}
+html.dark .bg-slate-900\/60 {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+}
+html.dark .bg-slate-950\/80 {
+  background-color: rgba(11, 15, 25, 0.8) !important;
+}
+html.dark .bg-slate-950\/40 {
+  background-color: rgba(11, 15, 25, 0.4) !important;
+}
+html.dark .bg-slate-950\/50 {
+  background-color: rgba(11, 15, 25, 0.5) !important;
+}
+html.dark .bg-slate-900\/20 {
+  background-color: rgba(15, 23, 42, 0.2) !important;
+}
+html.dark .bg-slate-950\/60 {
+  background-color: rgba(11, 15, 25, 0.6) !important;
+}
+html.dark .bg-slate-800 {
+  background-color: #1e293b !important;
+}
+html.dark .bg-slate-800:hover {
+  background-color: #334155 !important;
+}
+html.dark .hover\:bg-slate-900\/50:hover, html.dark .hover\:bg-slate-900\/80:hover {
+  background-color: rgba(15, 23, 42, 0.5) !important;
+}
+html.dark .bg-slate-950\/20 {
+  background-color: rgba(11, 15, 25, 0.2) !important;
+}
+
+html.dark .text-slate-100 {
+  color: #f8fafc !important;
+}
+html.dark .text-slate-200 {
+  color: #e2e8f0 !important;
+}
+html.dark .text-slate-300, html.dark .text-slate-350 {
+  color: #cbd5e1 !important;
+}
+html.dark .text-slate-450, html.dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+html.dark .text-slate-500, html.dark .text-slate-650 {
+  color: #64748b !important;
+}
+html.dark .text-white {
+  color: #ffffff !important;
+}
+
+html.dark .border-slate-800, 
+html.dark .border-slate-800\/80, 
+html.dark .border-slate-900, 
+html.dark .border-slate-900\/80, 
+html.dark .border-slate-850, 
+html.dark .border-slate-800\/60 {
+  border-color: #1e293b !important;
+}
+
+html.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  box-shadow: none !important;
+}
+
+html.dark .glass-panel-light {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+html.dark .bg-brand-950\/20 {
+  background-color: rgba(24, 34, 69, 0.2) !important;
+  border-color: rgba(99, 147, 242, 0.2) !important;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border: 1px solid #0f172a;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Map popup content and styling in dark mode */
+html.dark .leaflet-container {
+  background: #0f172a !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+html.dark .leaflet-bar {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+html.dark .leaflet-bar a {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+html.dark .leaflet-popup-content-wrapper {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+html.dark .leaflet-popup-tip {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Leaflet Tile Filter for Premium Dark Aesthetic */
+html.dark .dark-map .leaflet-tile-container {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Accent Glowing Elements */
+.glow-accent-blue {
+  box-shadow: 0 0 50px -12px rgba(99, 147, 242, 0.2);
+}
+
+.glow-accent-emerald {
+  box-shadow: 0 0 50px -12px rgba(16, 185, 129, 0.2);
+}
