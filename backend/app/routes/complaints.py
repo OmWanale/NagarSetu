@@ -6,7 +6,7 @@ from datetime import datetime
 from app.database import get_db
 from app.models import Complaint, User, DuplicateGroup
 from app.schemas import ComplaintCreate, ComplaintResponse, DuplicateGroupResponse
-from app.auth import get_current_user, get_current_officer
+from app.auth import get_current_user, get_current_officer, get_current_user_optional
 from app.ai.classifier import classify_complaint
 from app.ai.duplication import check_for_duplicates
 from app.ai.router import route_department
@@ -18,7 +18,7 @@ router = APIRouter()
 def file_complaint(
     complaint_in: ComplaintCreate,
     db: Session = Depends(get_db),
-    current_user: Optional[User] = Depends(get_current_user)
+    current_user: User | None = Depends(get_current_user_optional)
 ):
     # Fallback to demo citizen if auth is missing/bypassed (extremely useful for offline judge runs)
     citizen_id = current_user.id if current_user else None
